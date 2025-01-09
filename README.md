@@ -49,7 +49,6 @@ Note: Apart from the documentation of Tailwind CSS, a `public` directory was cre
 - Tailwind CSS
 - Flowbite
 
-### Useful resources
 
 - [Tailwind CSS](https://tailwindcss.com/docs/installation) - The documentation of Tailwind CSS was used to give the features to the template.
 - [Flowbite](https://flowbite.com/docs/getting-started/introduction/) - It is the most popular open-source library of interactive UI components built with the utility classes from Tailwind CSS.
