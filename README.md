@@ -6,7 +6,6 @@ In this project, the responsive template was made by a grid layout.
 
 ### Link
 
-- [Live Site URL](https://tailwindcss-recipe-blog-template.netlify.app/)
 
 ### Screenshot
 
@@ -50,14 +49,8 @@ Note: Apart from the documentation of Tailwind CSS, a `public` directory was cre
 - Tailwind CSS
 - Flowbite
 
-### Useful resources
 
 - [Tailwind CSS](https://tailwindcss.com/docs/installation) - The documentation of Tailwind CSS was used to give the features to the template.
 - [Flowbite](https://flowbite.com/docs/getting-started/introduction/) - It is the most popular open-source library of interactive UI components built with the utility classes from Tailwind CSS.
 - [Youtube](https://youtube.com/playlist?list=PL4cUxeGkcC9gpXORlEHjc5bgnIi5HEGhw) - The tutorial called 'Tailwind CSS tutorial' on Shaun Pelling's Youtube channel (The Net Ninja) helped to create the main structure of the template.
 
-## Author
-
-- Website - [ecemgo.com](https://www.ecemgo.com/)
-- Twitter - [@ecemgo](https://twitter.com/ecemgo)
-- Frontend Mentor - [@ecemgo](https://www.frontendmentor.io/profile/ecemgo)
