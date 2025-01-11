@@ -1,62 +1,109 @@
 #!/bin/bash
-
-# Configuration
-START_DATE="2024-01-01"
-END_DATE=$(date +"%Y-%m-%d")
-MIN_COMMITS_PER_DAY=5
-MAX_COMMITS_PER_DAY=14
 REMOTE_URL="https://github.com/Ismail-Mouyahada/Master-Quiz-Satoshi-Square-App-v01.git"
-BRANCH="main"
-COMMIT_MESSAGES=("fix bug" "ajout de validations" "modification du style" "mise à jour de la documentation" "réorganisation du code" "optimisation des performances" "correction d'une faute de frappe" "ajout de tests" "implémentation d'une nouvelle fonctionnalité")
 
-# Vérifiez si le script est dans un dépôt Git
-if [ ! -d ".git" ]; then
-    echo "Erreur : ce script doit être exécuté dans un dépôt Git."
-    exit 1
+# Vérifier si on est dans un repo git
+if [ ! -d .git ]; then
+    echo "Initialisation du dépôt Git..."
+    git init
 fi
 
-# Configure le dépôt distant
-git remote add origin "$REMOTE_URL" 2>/dev/null || echo "Remote 'origin' déjà configuré."
+# Générer un nombre aléatoire de commits entre 1 et 6
+nb_commits=$((RANDOM % 6 + 1))
 
-# Fonction pour générer une heure aléatoire
-generate_random_time() {
-    echo "$(printf "%02d" $((RANDOM % 24))):$(printf "%02d" $((RANDOM % 60))):$(printf "%02d" $((RANDOM % 60)))"
+# Dates de début et fin
+start_date="2024-01-01T00:00:00"
+end_date="2025-01-11T23:59:59"
+
+# Convertir les dates en timestamps
+start_ts=$(date -d "$start_date" +%s)
+end_ts=$(date -d "$end_date" +%s)
+
+# Fonction pour générer une date aléatoire
+random_date() {
+    local random_ts=$((RANDOM % (end_ts - start_ts) + start_ts))
+    date -d "@$random_ts" "+%Y-%m-%d %H:%M:%S"
 }
 
-# Fonction pour générer un nombre aléatoire de commits par jour
-generate_random_commits_per_day() {
-    echo $((RANDOM % (MAX_COMMITS_PER_DAY - MIN_COMMITS_PER_DAY + 1) + MIN_COMMITS_PER_DAY))
-}
+# Messages de commit organisés par type
+declare -A commit_messages=(
+    # Messages pour de nouvelles fonctionnalités
+    ["feat"]="
+        feat: ajouter la fonctionnalité de login
+        feat: implémenter la recherche avancée
+        feat: ajouter le support multilangue
+        feat: intégrer le système de notifications
+        feat: ajouter le tableau de bord utilisateur"
 
-# Fonction pour sélectionner un message de commit aléatoire
-get_random_commit_message() {
-    echo "${COMMIT_MESSAGES[$RANDOM % ${#COMMIT_MESSAGES[@]}]}"
-}
+    # Messages pour les corrections de bugs
+    ["fix"]="
+        fix: corriger le problème d'authentification
+        fix: résoudre le bug d'affichage sur mobile
+        fix: corriger la pagination des résultats
+        fix: résoudre le problème de cache
+        fix: corriger les erreurs de validation"
 
-# Boucle sur chaque jour entre START_DATE et END_DATE
-current_date="$START_DATE"
-while [[ "$current_date" < "$END_DATE" ]]; do
-    # Générer un nombre aléatoire de commits pour cette journée
-    num_commits=$(generate_random_commits_per_day)
-    echo "Date : $current_date, Nombre de commits : $num_commits"
+    # Messages pour la documentation
+    ["docs"]="
+        docs: mettre à jour la documentation API
+        docs: ajouter les exemples d'utilisation
+        docs: documenter les nouveaux endpoints
+        docs: améliorer le guide d'installation
+        docs: mettre à jour le changelog"
 
-    for ((i=1; i<=num_commits; i++)); do
-        random_time=$(generate_random_time)
-        commit_datetime="$current_date $random_time"
-        commit_message=$(get_random_commit_message)
+    # Messages pour les changements de configuration
+    ["config"]="
+        config: mettre à jour les dépendances
+        config: optimiser la configuration Docker
+        config: ajuster les paramètres de cache
+        config: configurer l'intégration continue
+        config: mettre à jour les variables d'environnement"
 
-        # Effectuer le commit vide avec un message aléatoire
-        GIT_AUTHOR_DATE="$commit_datetime" GIT_COMMITTER_DATE="$commit_datetime" \
-            git commit --allow-empty -m "$commit_message - $current_date #$i" --date="$commit_datetime"
-        echo "  -> Commit vide #$i à $commit_datetime avec le message : $commit_message"
+    # Messages pour le refactoring
+    ["refactor"]="
+        refactor: optimiser les requêtes de base de données
+        refactor: améliorer la structure du code
+        refactor: simplifier la logique métier
+        refactor: réorganiser les composants
+        refactor: optimiser les performances"
 
-        # Pousser le commit immédiatement
-        git push origin "$BRANCH"
-    done
+    # Messages pour les tests
+    ["test"]="
+        test: ajouter les tests unitaires
+        test: implémenter les tests d'intégration
+        test: ajouter les tests de performance
+        test: améliorer la couverture des tests
+        test: mettre à jour les scénarios de test"
+)
 
-    # Passer au jour suivant
-    current_date=$(date -I -d "$current_date + 1 day")
+# Types de commits disponibles
+commit_types=("feat" "fix" "docs" "config" "refactor" "test")
+
+echo "Génération de $nb_commits commits vides..."
+
+# Choisir un type de commit principal pour la cohérence
+main_type=${commit_types[$RANDOM % ${#commit_types[@]}]}
+
+for ((i=1; i<=$nb_commits; i++)); do
+    # Sélectionner le type (80% de chance d'utiliser le type principal)
+    if [ $((RANDOM % 100)) -lt 80 ]; then
+        type=$main_type
+    else
+        type=${commit_types[$RANDOM % ${#commit_types[@]}]}
+    fi
+    
+    # Convertir la chaîne de messages en tableau et sélectionner un message aléatoire
+    IFS=$'\n' read -r -d '' -a messages <<< "${commit_messages[$type]}"
+    message="${messages[$RANDOM % ${#messages[@]}]}"
+    
+    # Générer une date aléatoire
+    commit_date=$(random_date)
+    
+    # Créer un commit vide avec la date spécifiée
+    GIT_AUTHOR_DATE="$commit_date" GIT_COMMITTER_DATE="$commit_date" \
+    git commit --allow-empty -m "$(echo -e "$message" | xargs)"
+    
+    echo "Commit $i/$nb_commits créé à la date: $commit_date"
 done
 
-echo "Tous les commits vides ont été poussés avec succès vers $REMOTE_URL !"
-
+echo "Terminé ! $nb_commits commits vides ont été créés."
+echo "Utilisez 'git log' pour voir l'historique des commits."
