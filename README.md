@@ -54,3 +54,9 @@ Note: Apart from the documentation of Tailwind CSS, a `public` directory was cre
 - [Flowbite](https://flowbite.com/docs/getting-started/introduction/) - It is the most popular open-source library of interactive UI components built with the utility classes from Tailwind CSS.
 - [Youtube](https://youtube.com/playlist?list=PL4cUxeGkcC9gpXORlEHjc5bgnIi5HEGhw) - The tutorial called 'Tailwind CSS tutorial' on Shaun Pelling's Youtube channel (The Net Ninja) helped to create the main structure of the template.
 
+## Author
+
+**Ismail.M**, Software Engineer & DevOps
+
+- GitHub: [@ghostland-dev](https://github.com/ghostland-dev)
+- Website: [ismail-mouyahada.com](https://www.ismail-mouyahada.com)
